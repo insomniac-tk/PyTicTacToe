@@ -4,13 +4,13 @@
 '''
 from random import randint
 import time
-import sys
+import os,sys
 
 def game_header():
-    print("### PyTicTacToe ###")
-    print("Developed By Tejas Khanna | Version 0.1")
-    print("This is the python implementation of the famous two player paper and pencil strategy game.")
-    print("Feel free to use this code and modify it as you please :D ")
+    print("\n\n\t\t\t\t\t\t### PyTicTacToe ###")
+    print("\t\t\t\tDeveloped By Tejas Khanna | Version 0.1")
+    print("\t\t\t\tThis is the python implementation of the famous two player paper and pencil strategy game.")
+    print("\t\t\t\tFeel free to use this code and modify it as you please :D ")
 
 def delay_print(s):
     for c in s:
@@ -19,7 +19,7 @@ def delay_print(s):
         time.sleep(0.25)
 
 def display_numpad():
-    print(" - "*10)
+    print("\n"*3)
     print("\tPyTicTacToe Rules")
     print(" - "*10)
     for i in range(9,0,-3):
@@ -30,10 +30,11 @@ def display_numpad():
     time.sleep(2)
 
 def display(board):
+    print('\n'*2)
     print(" - "*10)
     for i in range(9,0,-3):
         k = i 
-        print("\t| ({}) ({}) ({}) |".format(board[k-2],board[k-1],board[k]))
+        print("\t| ( {} ) ( {} ) ( {} ) |".format(board[k-2],board[k-1],board[k]))
         print()
     print(" - "*10)
 
@@ -41,12 +42,13 @@ def place_mark(mark,position,board):
     board[position] = mark
 
 def input_players():
+    print('\n'*2)
     p1 = input("Enter your name player 1: ")
     p2 = input("Enter your name player 2: ")
     print("Welcome on board {} and {}".format(p1,p2))
     tmp = ''
     while not(tmp=='X' or tmp=='O'):
-        tmp = input("Choose your mark player1(X or O) => ")
+        tmp = input("Choose your mark {}(X or O) => ".format(p1))
     p1_mark = tmp
     p2_mark = 'X' if p1_mark == 'O' else 'O'
     print("{}: {},{} : {}".format(p1,p1_mark,p2,p2_mark))
@@ -57,12 +59,11 @@ def first_chance():
     print("Computer is deciding",end='')
     delay_print('.'*10)
     print()
-    time.sleep(5)
+    time.sleep(1)
     coin_flip = randint(0,1)
-    first_chance = 'Player 1' if coin_flip==0 else 'Player 2'
-    return first_chance
+    return 'Player 1' if coin_flip==0 else 'Player 2'
 
-def rules():
+def rules():    
     b = ['']*10 
     #print(len(b))
     display_numpad()
@@ -91,28 +92,31 @@ def space_check(board,position):
 
 def input_postion(p):
     # the input position has to be an integer 
-    pos = int(input('Enter your position, {}: '.format(p)))
-    return pos
+    position = int(input('Enter your position, {}: '.format(p)))
+    return position
 
 def main():
     board = ['']*10
     game_header()
     player1,player2,player1_mark,player2_mark = input_players()
-    rules()
     game_on = True
+    turn = first_chance()
+    print("\n{} will start!".format(turn))   
+
     while game_on:
-        turn = first_chance()
-        print("{} will start!".format(turn))
         # Player 1
         if turn == 'Player 1':
             # First show the board to the player 
             display(board)
+            print('...p1')
 
             # If the board isn't full let the player enter a position
 
             if not is_board_full(board):
+                print('...p1')
                 pos = 0
-                while pos not in [1,2,3,4,5,6,,7,8,9] or not space_check(board,pos):
+                # while the user enters a valid postion
+                while pos not in [1,2,3,4,5,6,7,8,9] and not space_check(board,pos):
                     pos = input_postion(turn)
                 place_mark(player1_mark,pos,board) 
                 display(board)
@@ -132,24 +136,28 @@ def main():
             else:
                 turn = 'Player 2'
         else:
+            print('...p2')
             
             display(board)
 
             if not is_board_full(board):
+                print('...p2')
                 pos = 0
-                while pos not in [1,2,3,4,5,6,7,8,9] or not space_check(board,pos):
+                while pos not in [1,2,3,4,5,6,7,8,9] and not space_check(board,pos):
                     pos = input_postion(turn)
                 place_mark(player2_mark,pos,board) 
                 display(board)
        
 
             if is_winner(player1_mark,board):
-                print('Player 1 has won!')
+                print('Player 2 has won!')
                 game_on = False
+                break
 
             elif is_board_full(board):
                 print('Game is a draw.')
                 game_on = False
+                break
 
             else:
                 turn = 'Player 1'
