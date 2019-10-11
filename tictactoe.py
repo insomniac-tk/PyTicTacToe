@@ -30,7 +30,7 @@ def display_numpad():
     time.sleep(2)
 
 def display(board):
-    print('\n'*2)
+    os.system('clear')
     print(" - "*10)
     for i in range(9,0,-3):
         k = i 
@@ -77,9 +77,7 @@ def rules():
     time.sleep(2)
 
 def is_board_full(board):
-    return not '' in board
-    # '' in board -> false
-    # not false = > true
+    return not '' in board[1:]
 
 def is_winner(mark,board):
     rows = (board[1] == mark and board[2] == mark and board[3] == mark) or (board[4] == mark and board[5] == mark and board[6] == mark)  or (board[7] == mark and board[8] == mark and board[9] == mark)
@@ -87,46 +85,57 @@ def is_winner(mark,board):
     diags = (board[1] == mark and board[5] == mark and board[9] == mark) or (board[7] == mark and board[5] == mark and board[3] == mark)
     return rows or cols or diags
 
-def space_check(board,position):
-    return board[position] ==   ''
+def is_spot_empty(board,position):
+    '''
+        True -  If the board[position] is empty 
+        False - If the board[position] is non-empty.
+    '''
+    return  board[position] ==   ''
+        
 
-def input_postion(p):
-    # the input position has to be an integer 
-    position = int(input('Enter your position, {}: '.format(p)))
+def input_postion(p,board):
+    position = 0
+    while position not in range(1,10) or not is_spot_empty(board,position):
+        try:
+            position = int(input('Enter your position, {}: '.format(p)))
+        except ValueError:
+            print('It has to be a number. Try again please :D')
+        except IndexError:
+            print('Whoa, that went out of bouds! Try again please :D ')
+        
+    
     return position
 
+def replay():
+    return input("Do you wanna play again ?").lower()=='y'
 def main():
     board = ['']*10
     game_header()
     player1,player2,player1_mark,player2_mark = input_players()
     game_on = True
     turn = first_chance()
-    print("\n{} will start!".format(turn))   
+    if turn.split()[1] == '1':
+        print("\n{} will start!".format(player1))
+    else:
+        print("\n{} will start!".format(player1)) 
+    input("Hit enter to start the game!")
 
     while game_on:
         # Player 1
+        display(board)
+        #print(is_board_full(board))
         if turn == 'Player 1':
-            # First show the board to the player 
+            pos = input_postion(turn,board)
+            place_mark(player1_mark,pos,board) 
             display(board)
-            print('...p1')
-
-            # If the board isn't full let the player enter a position
-
-            if not is_board_full(board):
-                print('...p1')
-                pos = 0
-                # while the user enters a valid postion
-                while pos not in [1,2,3,4,5,6,7,8,9] and not space_check(board,pos):
-                    pos = input_postion(turn)
-                place_mark(player1_mark,pos,board) 
-                display(board)
+            
             # So now what all can happen after player1 has made it's move 
             # 1. He might win.
             # 2. The board might become full 
             # 3. Nothing. We let player 2 play now.
 
             if is_winner(player1_mark,board):
-                print('Player 1 has won!')
+                print('{}({}) has won!'.format(player1,player1_mark))
                 game_on = False
 
             elif is_board_full(board):
@@ -136,21 +145,13 @@ def main():
             else:
                 turn = 'Player 2'
         else:
-            print('...p2')
             
+            pos = input_postion(turn,board)
+            place_mark(player2_mark,pos,board) 
             display(board)
-
-            if not is_board_full(board):
-                print('...p2')
-                pos = 0
-                while pos not in [1,2,3,4,5,6,7,8,9] and not space_check(board,pos):
-                    pos = input_postion(turn)
-                place_mark(player2_mark,pos,board) 
-                display(board)
-       
-
-            if is_winner(player1_mark,board):
-                print('Player 2 has won!')
+            
+            if is_winner(player2_mark,board):
+                print('{}({}) has won!'.format(player2,player2_mark))
                 game_on = False
                 break
 
@@ -164,6 +165,9 @@ def main():
 
 
 
-
 if __name__=='__main__':
-    main()
+    os.system('clear')
+    while True:
+        main()
+        if not replay():
+            break
