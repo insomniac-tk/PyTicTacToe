@@ -7,8 +7,7 @@ import time
 import os,sys
 
 def game_header():
-    print("\n\n\t\t\t\t\t\t### PyTicTacToe ###")
-    print("\t\t\t\tDeveloped By Tejas Khanna | Version 0.1")
+    print("\n\t\t\t\t\t\t### PyTicTacToe \tVersion 0.1 ###")
     print("\t\t\t\tThis is the python implementation of the famous two player paper and pencil strategy game.")
     print("\t\t\t\tFeel free to use this code and modify it as you please :D ")
 
