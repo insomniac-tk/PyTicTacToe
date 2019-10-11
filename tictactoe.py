@@ -1,7 +1,3 @@
-'''
-    Author : Tejas Khanna
-    Version: 0.1
-'''
 from random import randint
 import time
 import os,sys
